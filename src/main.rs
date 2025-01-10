@@ -1,8 +1,10 @@
-use chess_rs::{Game, Result};
+use chess_rs::{boards::bishop_moves, Game, Result};
 use std::io::{self, Write};
 
 
 fn main() -> Result<()> {
+    // bishop_moves();
+    // return Ok(());
     let game = Game::default();
     let mut input = String::new();
     loop {

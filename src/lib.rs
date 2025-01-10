@@ -35,6 +35,7 @@ pub struct Player {
 }
 
 impl Player {
+    /// create boards with the starting positions of each player's pieces
     pub fn new(color: PlayerColor) -> Self {
         let (pawns, rooks, knights, bishops, queen, king) = match color {
             PlayerColor::Black => (
@@ -101,6 +102,7 @@ impl Game {
     }
 
     // TODO: check active piece board of each player?
+    // TODO: nuke this
     pub fn query(&self, position: u64) -> Option<Piece> {
         let mut slice = [0u64; 16];
         slice[..self.boards().len()].copy_from_slice(self.boards().as_slice());

@@ -1,3 +1,5 @@
+use crate::print_moves;
+
 pub const WHITE_ROOK_MOVES: [u64; 64] = rook_moves();
 pub const BLACK_ROOK_MOVES: [u64; 64] = rook_moves();
 pub const WHITE_PAWN_MOVES: [u64; 64] = white_pawn_moves();
@@ -7,6 +9,64 @@ pub const BLACK_KNIGHT_MOVES: [u64; 64] = knight_moves();
 
 pub fn bishop_moves() -> [u64; 64] {
     let mut moves: [u64; 64] = [0u64; 64];
+    let mut i = 0;
+    while i < 64 {
+        let mut x: u64 = 1 << i;
+        let mut j = 1;
+        let diag_up_right_range = i % 8;
+        while j <= diag_up_right_range {
+            let diagonal_up_right = 7 * j;
+            if i + diagonal_up_right > 63 {
+                break;
+            } else {
+                x |= 1 << (i + diagonal_up_right);
+                j += 1;
+            }
+        }
+        j = 1;
+        while j <= 8 {
+            let diagonal_up_left = 9 * j;
+            if i + diagonal_up_left > 63 {
+                break;
+            } else {
+                x |= 1 << (i + diagonal_up_left);
+                j += 1;
+            }
+        }
+        j = 1;
+        // need to validate how many moves diagonally down & to the left we can make
+        // say we start at b8 (62), there is only 1 valid move: a7 (55)
+        let mut diag_down_left_range = 63 - i;
+        if diag_down_left_range > 1 {
+            diag_down_left_range = diag_down_left_range % 8;
+        }
+        while j <= diag_down_left_range {
+            let diagonal_down_left = 7 * j;
+            let next_move = i as isize - diagonal_down_left;
+            // this doesnt really make sense, there is probably a better way &
+            // this probably doesnt work in all situations
+            if next_move == 8 || next_move < 0 {
+                break;
+            } else {
+                x |= 1 << (i - diagonal_down_left);
+                j += 1;
+            }
+        }
+        j = 1;
+        while j <= 8 {
+            let diagonal_down_right = 9 * j;
+            if i as isize - diagonal_down_right < 0 {
+                break;
+            } else {
+                x |= 1 << (i - diagonal_down_right);
+                j += 1;
+            }
+        }
+        println!("{i}");
+        print_moves(x);
+        moves[i as usize] = x;
+        i += 1;
+    }
     moves
 }
 
